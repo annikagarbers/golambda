@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	// If we have an arg on the command line, use it; that's where
+	// If there is an arg on the command line, use it; that's where
 	// the JSON is passed by the JavaScript launcher. Otherwise,
 	// read from stdin (for local testing).
 
@@ -45,16 +45,17 @@ func main() {
 	sns := r["Sns"].(map[string]interface{})
 	message := sns["Message"].(string)
 
-	fmt.Println(message)
-	os.Exit(0)
+	// For testing, re-enable these lines to just dump the raw JSON
+	// or whatever's in the "Message" element.
+	// fmt.Println(message)
+	// os.Exit(0)
 
 	var githubMsg map[string]interface{}
 	jsonErr = json.Unmarshal([]byte(message), &githubMsg)
 	if jsonErr != nil {
-		fmt.Printf("error parsing github message: %s", jsonErr)
+		fmt.Printf("Message does not appear to be JSON: %s", message)
 		os.Exit(1)
 	}
-
-	// fmt.Printf("parsed github message is  %s\n", githubMsg)
+	fmt.Printf("parsed github message is  %s\n", githubMsg)
 
 }
